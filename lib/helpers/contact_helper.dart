@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -13,7 +14,7 @@ final String imgColumn = "imgColumn";
 class ContactHelper {
  static final ContactHelper _instance = ContactHelper.internal();
 
-  factory ContactHelper ()=> _instance;
+factory ContactHelper ()=> _instance;
 
  ContactHelper.internal();
 
@@ -39,6 +40,27 @@ class ContactHelper {
       );
     });
 
+  }
+
+  Future<Contact> saveContact(Contact contact) async{
+    Database dbContact = await db;
+    contact.id = await dbContact.insert(contactTable, contact.toMap());
+    return contact;
+  }
+
+  Future<Contact> getContact(int id) async{
+    Database dbContact = await db;
+    List<Map> maps = await dbContact.query(contactTable, 
+    columns: [idColumn, nameColumn, emailColumn, phoneColumn, imgColumn],
+    where: "$idColumn = ?", 
+    whereArgs: [id] 
+    );
+    if(maps.length > 0){
+      return Contact.fromMap(maps.first);
+    }
+    else {
+      return null; 
+    }
   }
 
 }
@@ -73,7 +95,6 @@ class Contact {
   }
   @override
   String toString() {
-    // TODO: implement toString
     return "Contact(ID: $id, Name: $name, Email: $email, Phone: $phone, Img: $img )";
   }
 
