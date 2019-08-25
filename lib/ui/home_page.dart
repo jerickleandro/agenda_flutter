@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:agenda/helpers/contact_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +42,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(10.0),
           itemCount: contacts.length,
           itemBuilder: (context, index){
-            
+            return _contactCard(context, index);
           }
         ),
     );
@@ -59,15 +61,40 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: null
-                  )
+                    image: contacts[index].img != null ? 
+                    FileImage(File(contacts[index].img)) :
+                    AssetImage("images/person.png")
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(contacts[index].name ?? "",
+                    style: TextStyle(
+                      fontSize: 22.0, fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(contacts[index].email ?? "",
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      ),
+                    ), 
+                    Text(contacts[index].phone ?? "",
+                    style: TextStyle(
+                      fontSize: 18.0
+                      ),
+                    ),
+                  ],
                 ),
               )
             ],
           ),
         ),
       ),
-    )
+    );
   }
 
 
